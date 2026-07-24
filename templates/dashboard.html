@@ -1,27 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expense Tracker</title>
-    <link rel="stylesheet"href="/static/style.css">
-</head>
-<body>
-    <h1>Expense Tracker</h1>
-    <h2>Dashboard</h2>
-    <h3>Welcome,User</h3>
-    <h4>Add Expense</h4>
-    <form action="/register"method="post">
-        <label for="username">Usename:</label>
-        <input type="text" id="username"name="username">
-        <br><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email"name="email">
-        <br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password"name="password">
-        <br><br>
-        <button type="submit">Register</button>
+<!doctype html>
+<html>
+  <head>
+    <title>Expense Tracker Dashboard</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      form {
+        width: 400px;
+        margin: auto;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      table {
+        width: 80%;
+        margin: 40px auto;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+        padding: 12px;
+        text-align: center;
+      }
+
+      h2 {
+        text-align: center;
+        margin-top: 50px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Welcome, User</h1>
+
+    <h2>Add Expense</h2>
+
+    <form action="/add-expense" method="post">
+      <input type="text" name="title" placeholder="Title" required />
+
+      <input type="number" name="amount" placeholder="Amount" required />
+
+      <input type="text" name="category" placeholder="Category" required />
+
+      <input type="date" name="date" required />
+
+      <button type="submit">Add Expense</button>
     </form>
-</body>
+
+    <h2>Your Expenses</h2>
+
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Date</th>
+      </tr>
+
+      {% for expense in expenses %}
+
+      <tr>
+        <td>{{ expense.title }}</td>
+        <td>{{ expense.amount }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.date }}</td>
+      </tr>
+
+      {% endfor %}
+    </table>
+  </body>
 </html>

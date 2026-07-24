@@ -1,8 +1,10 @@
 from fastapi import FastAPI,Form,Depends,Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from database import engine,SessionLocal
+from security import verify_token
 import models
 import crud
 app=FastAPI()
@@ -50,4 +52,35 @@ def login_user(
     password:str=Form(...),
     db:Session=Depends(get_db)
 ):
-    return crud.login_user(db,email,password)
+    result=crud.login_user(db,email,password)
+    response=RedirectResponse(url="/dashboard",status_code=303)
+    response.set_cookie(key="access_token",value=result["access_token"])
+    return response
+
+
+@app.get("/dashboard")
+def dashboard(request:Request,db:Session=Depends(get_db)):
+    token=request.cookies.get("access_token")
+    user_id=verify_token(token)
+    expenses=crud.get_expenses(db,user_id)
+    return templates.TemplateResponse(request=request,name="dashboard.html",
+        context={
+            "request":request,
+            "expenses":expenses
+        }
+    )
+
+@app.post("/add-expense")
+def expenses(
+    request:Request,
+    title:str=Form(...),
+    amount:float=Form(...),
+    category:str=Form(...),
+    date:str=Form(...),
+    db:Session=Depends(get_db)
+):
+    token = request.cookies.get("access_token")
+    user_id = verify_token(token)
+    print(user_id)
+    return crud.add_expense(db,title,amount,category,date,user_id)
+

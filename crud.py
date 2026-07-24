@@ -21,8 +21,29 @@ def login_user(db:Session,email:str,password:str):
         return "user not found"
     if not verify_password(password,existing_user.hashed_password):
         return "wrong password"
-    token=create_access_token({"sub":existing_user.username})
+    token=create_access_token({"sub":existing_user.username,"user_id":existing_user.id})
     return{
         "access_token":token,
         "token_type":"bearer"
     }
+
+
+def add_expense(db:Session,title:str,amount:float,category:str,date:str,user_id:int):
+    expenses=models.Expenses(
+        title=title,
+        amount=amount,
+        category=category,
+        date=date,
+        user_id=user_id
+    )
+    db.add(expenses)
+    db.commit()
+    db.refresh(expenses)
+    return{
+        "message":"expenses added successfully"
+    }
+def get_expenses(
+    db: Session,
+    user_id: int):
+    expenses = db.query(models.Expenses).filter(models.Expenses.user_id == user_id).all()
+    return expenses
