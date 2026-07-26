@@ -1,93 +1,118 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Expense Tracker Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 40px;
-      }
+<body>
+    <div class="logout-container">
+    <form action="/logout" method="post">
+        <button class="logout-btn" type="submit">
+            Logout
+        </button>
+    </form>
+</div>
+    <h1>Welcome, {{username}}</h1>
 
-      h1 {
-        text-align: center;
-      }
-
-      form {
-        width: 400px;
-        margin: auto;
-      }
-
-      input {
-        width: 100%;
-        padding: 10px;
-        margin-top: 10px;
-        margin-bottom: 15px;
-      }
-
-      button {
-        width: 100%;
-        padding: 10px;
-        cursor: pointer;
-      }
-
-      table {
-        width: 80%;
-        margin: 40px auto;
-        border-collapse: collapse;
-      }
-
-      th,
-      td {
-        border: 1px solid black;
-        padding: 12px;
-        text-align: center;
-      }
-
-      h2 {
-        text-align: center;
-        margin-top: 50px;
-      }
-    </style>
-  </head>
-
-  <body>
-    <h1>Welcome, User</h1>
+    <h2>Total Expense: Rs. {{ total }}</h2>
 
     <h2>Add Expense</h2>
 
     <form action="/add-expense" method="post">
-      <input type="text" name="title" placeholder="Title" required />
 
-      <input type="number" name="amount" placeholder="Amount" required />
+        <input
+            type="text"
+            name="title"
+            placeholder="Title"
+            required
+        >
 
-      <input type="text" name="category" placeholder="Category" required />
+        <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            required
+        >
 
-      <input type="date" name="date" required />
+        <input
+            type="text"
+            name="category"
+            placeholder="Category"
+            required
+        >
 
-      <button type="submit">Add Expense</button>
+        <input
+            type="date"
+            name="date"
+            required
+        >
+
+        <button type="submit">
+            Add Expense
+        </button>
+
+    </form>
+
+    <h2>Filter by Month</h2>
+
+    <form action="/filter-month" method="post">
+
+        <input
+            type="month"
+            name="month"
+            required
+        >
+
+        <button type="submit">
+            Show
+        </button>
+
     </form>
 
     <h2>Your Expenses</h2>
 
     <table>
-      <tr>
-        <th>Title</th>
-        <th>Amount</th>
-        <th>Category</th>
-        <th>Date</th>
-      </tr>
 
-      {% for expense in expenses %}
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
 
-      <tr>
-        <td>{{ expense.title }}</td>
-        <td>{{ expense.amount }}</td>
-        <td>{{ expense.category }}</td>
-        <td>{{ expense.date }}</td>
-      </tr>
+        {% for expense in expenses %}
 
-      {% endfor %}
+        <tr>
+
+            <td>{{ expense.title }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.date }}</td>
+
+            <td>
+                <a href="/edit-expense/{{ expense.id }}">
+                    ✏️
+                </a>
+            </td>
+
+            <td>
+                <form action="/delete-expense/{{ expense.id }}" method="post">
+                    <button type="submit">
+                        🗑️
+                    </button>
+                </form>
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
     </table>
-  </body>
+
+</body>
+
 </html>
