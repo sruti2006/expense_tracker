@@ -39,7 +39,9 @@ def register_user(
     password:str=Form(...),
     db:Session=Depends(get_db)
 ):
-    return crud.create_user(db,username,email,password)
+    crud.create_user(db,username,email,password)
+    return RedirectResponse(url="/login",status_code=303)
+
 
 
 @app.get("/login")#it shows the registration page
