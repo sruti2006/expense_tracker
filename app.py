@@ -8,6 +8,12 @@ from security import verify_token
 import models
 import crud
 app=FastAPI()
+
+@app.get("/")
+def home():
+    return RedirectResponse(url="/register")
+
+
 app.mount("/static",StaticFiles(directory="static"),name="static")
 templates=Jinja2Templates(directory="templates")
 models.Base.metadata.create_all(bind=engine)
